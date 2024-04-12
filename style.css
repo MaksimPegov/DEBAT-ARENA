@@ -1,0 +1,20 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+}
+
+.banner {
+  margin: 30px auto;
+}
+
+.form-group {
+  margin: 30px auto;
+  width: 700px;
+}
+
+.alert {
+  margin: 30px auto;
+  width: 700px;
+}
