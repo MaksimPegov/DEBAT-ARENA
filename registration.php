@@ -5,17 +5,17 @@ $succes = false;
 $alertText = '';
 
 if (filter_has_var(INPUT_POST, 'submit')) {
-  $login = trim(htmlspecialchars($_POST['login']));
+  $email = trim(htmlspecialchars($_POST['email']));
   $password = trim(htmlspecialchars($_POST['password']));
   $passwordConfirm = trim(htmlspecialchars($_POST['passwordConfirm']));
   $passwordMatch = $password === $passwordConfirm;
 
-  if(validateUsername($login) && validatePasword($password) && $passwordMatch){
+  if(validateEmail($email) && validatePasword($password) && $passwordMatch){
     $succes = true;
     $alertText = 'Registration successful';
-  } elseif (!validateUsername($login)) {
+  } elseif (!validateEmail($email)) {
     $alert = true;
-    $alertText = 'Login is not valid';
+    $alertText = 'Email is not valid';
   } elseif (!validatePasword($password)) {
     $alert = true;
     $alertText = 'Password is not valid';
@@ -30,10 +30,10 @@ if (filter_has_var(INPUT_POST, 'submit')) {
 <?php require 'inc/header.php'; ?>
   <h1 class="banner">Registrate new account</h1>
 
-  <form method="post" action="<?php echo $_SERVER["PHP_SELF"] ?>">
+  <form class="regForm" method="post" action="<?php echo $_SERVER["PHP_SELF"] ?>">
     <div class="form-group">
-      <label for="login">Login</label>
-      <input type="text" class="form-control" id="login" name="login" placeholder="Enter your login">
+      <label for="email">Email</label>
+      <input type="text" class="form-control" id="email" name="email" placeholder="Enter your email">
     </div>
 
     <div class="form-group">
@@ -44,6 +44,16 @@ if (filter_has_var(INPUT_POST, 'submit')) {
     <div class="form-group">
       <label for="password">Confirm password</label>
       <input type="text" class="form-control" id="passwordConfirm" name="passwordConfirm" placeholder="Confirm your password">
+    </div>
+
+    <div id="password-req" >
+      <h5>Password requirements</h5>
+      <ul>
+        <li>8 characters</li>
+        <li>Uppercase letters</li>
+        <li>Lowercase letters</li>
+        <li>Numbers</li>
+        <li>Special characters</li>
     </div>
 
     <div class="text-center">
@@ -60,5 +70,6 @@ if (filter_has_var(INPUT_POST, 'submit')) {
     <?php endif; ?>
     </div>
   </form>
+
 </body>
 </html>

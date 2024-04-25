@@ -1,24 +1,49 @@
 <?php
+require('config/db_conn.php');
+require('config/config.php');
 include 'dataValidation.php';
 $alert = false;
 $succes = false;
 $alertText = '';
 
 if (filter_has_var(INPUT_POST, 'submit')) {
-  $login = trim(htmlspecialchars($_POST['login']));
+  $email = trim(htmlspecialchars($_POST['email']));
   $password = trim(htmlspecialchars($_POST['password']));
 
-  if(validateUsername($login) && validatePasword($password)){
-    $succes = true;
-    $alertText = 'Login successful';
-  } elseif (!validateUsername($login)) {
+  if(validateEmail($email) && validatePasword($password)){
+    $query = "select * from users where email='$email';";
+    $reuslt = mysqli_query($connect, $query);
+  
+    $posts = mysqli_fetch_all($reuslt, MYSQLI_ASSOC);
+  
+    $db_password = $posts[0]['password'];
+  
+    mysqli_free_result($reuslt);
+    mysqli_close($connect);
+  
+    if($password === $db_password){
+      $alert = false;
+      $succes = false;
+      
+      session_start();
+      $_SESSION['email'] = $email;
+      $_SESSION['userId'] = $posts[0]['id'];
+      header('Location: ' . ROOT_URL);
+    }else{
+      $succes = false;
+      $alert = true;
+      $alertText = "Invalid email or password";
+    }
+  } elseif (!validateEmail($email)) {
+    $succes = false;
     $alert = true;
-    $alertText = 'Login is not valid';
+    $alertText = 'Email is not valid';
   } elseif (!validatePasword($password)) {
+    $succes = false;
     $alert = true;
     $alertText = 'Password is not valid';
   }
-} 
+}
 
 ?>
 
@@ -27,8 +52,8 @@ if (filter_has_var(INPUT_POST, 'submit')) {
 
   <form method="post" action="<?php echo $_SERVER["PHP_SELF"] ?>">
     <div class="form-group">
-      <label for="login">Login</label>
-      <input type="text" class="form-control" id="login" name="login" placeholder="Enter your login">
+      <label for="email">Email</label>
+      <input type="text" class="form-control" id="email" name="email" placeholder="Enter your email">
     </div>
 
     <div class="form-group">
