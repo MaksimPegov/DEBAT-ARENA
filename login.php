@@ -29,6 +29,7 @@ if (filter_has_var(INPUT_POST, 'submit')) {
       $_SESSION['email'] = $email;
       $_SESSION['userId'] = $posts[0]['id'];
       header('Location: ' . ROOT_URL);
+      exit();
     }else{
       $succes = false;
       $alert = true;
